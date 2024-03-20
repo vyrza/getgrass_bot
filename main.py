@@ -3,6 +3,7 @@
 # @Author   :ym
 # @File     :main.py
 # @Software :PyCharm
+import os
 import asyncio
 import random
 import ssl
@@ -72,16 +73,14 @@ async def connect_to_wss(socks5_proxy, user_id):
 
 
 async def main():
-    # TODO 修改user_id
-    _user_id = 'user_id'
-    # TODO 修改代理列表
-    socks5_proxy_list = [
-        'socks5://user:pwd@ip:port',
-    ]
+    _user_id = os.getenv('USER_ID', 'default_user_id')  # Use default if not set
+    proxy = os.getenv('SOCKS5_PROXY', 'socks5://default:user@ip:port')  # Use default if not set
+    
+    socks5_proxy_list = [proxy]
+    
     tasks = [asyncio.ensure_future(connect_to_wss(i, _user_id)) for i in socks5_proxy_list]
     await asyncio.gather(*tasks)
 
 
-if __name__ == '__main__':
-    # # 运行主函数
+if __name__ == "__main__":
     asyncio.run(main())
