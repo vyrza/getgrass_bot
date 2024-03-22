@@ -3,6 +3,7 @@
 # @Author   :ym
 # @File     :main.py
 # @Software :PyCharm
+
 import os
 import asyncio
 import random
@@ -12,7 +13,9 @@ import time
 import uuid
 from loguru import logger
 from websockets_proxy import Proxy, proxy_connect
+from fake_useragent import UserAgent  # Import the UserAgent class
 
+user_agent = UserAgent()  # Create a UserAgent object
 
 async def connect_to_wss(socks5_proxy, user_id):
     device_id = str(uuid.uuid3(uuid.NAMESPACE_DNS, socks5_proxy))
@@ -20,8 +23,9 @@ async def connect_to_wss(socks5_proxy, user_id):
     while True:
         try:
             await asyncio.sleep(random.randint(1, 10) / 10)
+            random_user_agent = user_agent.random  # Generate a random user agent for each connection
             custom_headers = {
-                "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/119.0.0.0 Safari/537.36"
+                "User-Agent": random_user_agent
             }
             ssl_context = ssl.create_default_context()
             ssl_context.check_hostname = False
@@ -39,7 +43,6 @@ async def connect_to_wss(socks5_proxy, user_id):
                         await websocket.send(send_message)
                         await asyncio.sleep(20)
 
-                # asyncio.create_task(send_http_request_every_10_seconds(socks5_proxy, device_id))
                 await asyncio.sleep(1)
                 asyncio.create_task(send_ping())
 
