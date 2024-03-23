@@ -1,9 +1,3 @@
-# -*- coding: utf-8 -*-
-# @Time     :2023/12/26 17:00
-# @Author   :ym
-# @File     :main.py
-# @Software :PyCharm
-
 import os
 import asyncio
 import random
@@ -13,9 +7,23 @@ import time
 import uuid
 from loguru import logger
 from websockets_proxy import Proxy, proxy_connect
-from fake_useragent import UserAgent  # Import the UserAgent class
+from fake_useragent import UserAgent
 
-user_agent = UserAgent()  # Create a UserAgent object
+# Initialize UserAgent outside of the async function to avoid re-initialization on every call
+user_agent = UserAgent()
+
+def get_random_desktop_user_agent():
+    # Select a random user agent for desktop browsers
+    desktop_browsers = [
+        user_agent.chrome,
+        user_agent.firefox,
+        user_agent.safari,
+        user_agent.edge,
+        user_agent.opera
+    ]
+    # Randomly choose among the desktop browser methods and call it to get the user agent string
+    random_desktop_user_agent = random.choice(desktop_browsers)()
+    return random_desktop_user_agent
 
 async def connect_to_wss(socks5_proxy, user_id):
     device_id = str(uuid.uuid3(uuid.NAMESPACE_DNS, socks5_proxy))
@@ -23,7 +31,10 @@ async def connect_to_wss(socks5_proxy, user_id):
     while True:
         try:
             await asyncio.sleep(random.randint(1, 10) / 10)
-            random_user_agent = user_agent.random  # Generate a random user agent for each connection
+            
+            # Use the function to get a random desktop browser user agent
+            random_user_agent = get_random_desktop_user_agent()
+            
             custom_headers = {
                 "User-Agent": random_user_agent
             }
