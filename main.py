@@ -17,9 +17,7 @@ def get_random_desktop_user_agent():
     desktop_browsers = [
         user_agent.chrome,
         user_agent.firefox,
-        user_agent.safari,
         user_agent.edge,
-        user_agent.opera
     ]
     # Randomly choose among the desktop browser methods and call it to get the user agent string
     random_desktop_user_agent = random.choice(desktop_browsers)()
