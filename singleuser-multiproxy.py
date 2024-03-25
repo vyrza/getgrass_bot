@@ -13,14 +13,14 @@ from fake_useragent import UserAgent
 user_agent = UserAgent()
 
 def get_random_desktop_user_agent():
-    # Select a random user agent for desktop browsers
-    desktop_browsers = [
+    # Directly select a random user agent string from a predefined list
+    desktop_user_agents = [
         user_agent.chrome,
         user_agent.firefox,
         user_agent.edge,
     ]
-    # Randomly choose among the desktop browser methods and call it to get the user agent string
-    random_desktop_user_agent = random.choice(desktop_browsers)()
+    # Randomly choose among the desktop user agent strings
+    random_desktop_user_agent = random.choice(desktop_user_agents)
     return random_desktop_user_agent
 
 async def connect_to_wss(socks5_proxy, user_id):
